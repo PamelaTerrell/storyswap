@@ -1,56 +1,158 @@
-import { useEffect, useState } from "react"
-import { supabase } from "./supabaseClient"
+import React, { useEffect, useState } from "react";
+import { supabase } from "./supabase";
+import "./App.css";
 
-function App() {
-  const [stories, setStories] = useState([])
-  const [newStory, setNewStory] = useState("")
-
-  // Fetch stories
-  useEffect(() => {
-    fetchStories()
-  }, [])
-
-  const fetchStories = async () => {
-    const { data, error } = await supabase.from("stories").select("*").order("created_at", { ascending: false })
-    if (!error) setStories(data)
-  }
+export default function App() {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [author, setAuthor] = useState("");
+  const [anonymous, setAnonymous] = useState(true);
+  const [status, setStatus] = useState("");
+  const [stories, setStories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!newStory.trim()) return
+    e.preventDefault();
+    setStatus("✨ Submitting...");
 
-    const { error } = await supabase.from("stories").insert([{ content: newStory }])
-    if (!error) {
-      setNewStory("")
-      fetchStories()
+    // Build the data object conditionally
+    const submission = anonymous
+      ? { title, content }
+      : { title, content, author };
+
+    const { error } = await supabase.from("stories").insert([submission]);
+
+    if (error) {
+      console.error("Supabase Error:", error);
+      setStatus("❌ Failed to submit story.");
+    } else {
+      setStatus("✅ Your story has been shared!");
+      setTitle("");
+      setContent("");
+      setAuthor("");
+      setAnonymous(true);
+      fetchStories();
     }
-  }
+  };
+
+  const fetchStories = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("stories")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching stories:", error.message);
+    } else {
+      setStories(data);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchStories();
+  }, []);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  }, [darkMode]);
 
   return (
-    <div style={{ maxWidth: "600px", margin: "2rem auto", padding: "1rem" }}>
-      <h1>📖 Share Your Story</h1>
-      <form onSubmit={handleSubmit}>
-        <textarea
-          placeholder="What's something you've learned or want to share?"
-          value={newStory}
-          onChange={(e) => setNewStory(e.target.value)}
-          style={{ width: "100%", height: "100px", marginBottom: "1rem" }}
+    <div className={`app-container ${darkMode ? "dark" : "light"}`} role="main" aria-label="StorySwap app">
+      <header className="header">
+        <h1 className="app-title">StorySwap</h1>
+        <button
+          className="dark-mode-toggle"
+          onClick={() => setDarkMode(!darkMode)}
+          aria-label="Toggle dark mode"
+          aria-pressed={darkMode}
+        >
+          {darkMode ? "🌞 Light Mode" : "🌙 Dark Mode"}
+        </button>
+      </header>
+
+      <div className="book-emoji" aria-hidden="true" role="img" aria-label="Open book emoji">
+        📖
+      </div>
+
+      <p className="subtitle">
+        A place to anonymously (or not) share wisdom, life lessons, or stories that shaped you.
+      </p>
+
+      <form onSubmit={handleSubmit} aria-label="Submit your story" className="story-form">
+        <label htmlFor="title">Title</label>
+        <input
+          id="title"
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+          placeholder="What’s your story called?"
         />
-        <button type="submit">Submit</button>
+
+        <label>
+          <input
+            type="checkbox"
+            checked={anonymous}
+            onChange={(e) => {
+              setAnonymous(e.target.checked);
+              if (e.target.checked) setAuthor("");
+            }}
+          />
+          Submit anonymously
+        </label>
+
+        <label htmlFor="author">Name or Email</label>
+        <input
+          id="author"
+          type="text"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+          placeholder="Your name or email (optional)"
+          disabled={anonymous}
+          required={!anonymous}
+        />
+
+        <label htmlFor="content">Your Story</label>
+        <textarea
+          id="content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          required
+          placeholder="Tell us something meaningful or beautiful..."
+          rows={5}
+        ></textarea>
+
+        <button type="submit" className="submit-btn">📤 Share My Story</button>
+        <p className="status-message" aria-live="polite">{status}</p>
       </form>
 
-      <hr />
+      <h2 className="shared-stories-heading">
+        🌠 Shared Stories ({stories.length})
+      </h2>
 
-      <h2>Recent Stories</h2>
-      <ul>
-        {stories.map((story) => (
-          <li key={story.id} style={{ marginBottom: "1rem" }}>
-            {story.content}
-          </li>
-        ))}
-      </ul>
+      {loading ? (
+        <p className="loading">Loading stories...</p>
+      ) : stories.length > 0 ? (
+        <ul className="stories-list">
+          {stories.map((story) => (
+            <li key={story.id} className="story-item fade-in">
+              <h3 className="story-title">{story.title}</h3>
+              <p className="story-text">{story.content}</p>
+              {story.author && <p className="story-author">— {story.author}</p>}
+              <p className="story-time">🕒 {new Date(story.created_at).toLocaleString()}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="no-stories">No stories yet. Be the first to share something ✨</p>
+      )}
     </div>
-  )
+  );
 }
-
-export default App

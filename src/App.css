@@ -1,0 +1,400 @@
+/* Root CSS variables for clean textbook style */
+:root {
+  --bg-light: #ffffff;
+  --text-light: #222222;
+  --primary-light: #005a9c;
+  --bg-dark: #1e1e1e;
+  --text-dark: #f0f0f0;
+  --primary-dark: #3a8dde;
+}
+
+/* Global styles */
+body {
+  margin: 0;
+  font-family: "Georgia", serif;
+  background: var(--bg-light);
+  color: var(--text-light);
+  line-height: 1.6;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body.dark-mode {
+  background: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+.app-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    padding: 0 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-container {
+    margin: 1rem;
+    padding: 0 0.5rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .app-container {
+    padding: 0 0.4rem;
+  }
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.app-title {
+  font-family: "Georgia", serif;
+  font-weight: 700;
+  font-size: 2.25rem;
+  color: var(--primary-light);
+  margin: 0;
+}
+
+body.dark-mode .app-title {
+  color: var(--primary-dark);
+}
+
+/* Dark mode toggle */
+.dark-mode-toggle {
+  background: transparent;
+  border: 1.5px solid var(--primary-light);
+  color: var(--primary-light);
+  padding: 0.4rem 1rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  white-space: nowrap;
+}
+
+.dark-mode-toggle:hover,
+.dark-mode-toggle:focus {
+  background: var(--primary-light);
+  color: var(--bg-light);
+  outline: none;
+}
+
+body.dark-mode .dark-mode-toggle {
+  border-color: var(--primary-dark);
+  color: var(--primary-dark);
+}
+
+body.dark-mode .dark-mode-toggle:hover,
+body.dark-mode .dark-mode-toggle:focus {
+  background: var(--primary-dark);
+  color: var(--bg-dark);
+}
+
+/* Open book emoji styling */
+.book-emoji {
+  font-size: 4rem;
+  text-align: center;
+  margin: 1.5rem 0 2rem 0;
+  user-select: none;
+}
+
+/* Subtitle */
+.subtitle {
+  font-size: 1.15rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #444;
+}
+
+body.dark-mode .subtitle {
+  color: #ccc;
+}
+
+/* Form */
+.story-form label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+body.dark-mode .story-form label {
+  color: var(--text-dark);
+}
+
+.story-form input,
+.story-form textarea {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 1rem;
+  border: 1.5px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: #fff;
+  color: var(--text-light);
+  transition: border-color 0.3s ease;
+}
+
+body.dark-mode .story-form input,
+body.dark-mode .story-form textarea {
+  background: #2a2a2a;
+  border-color: #555;
+  color: var(--text-dark);
+}
+
+.story-form input:focus,
+.story-form textarea:focus {
+  outline: none;
+  border-color: var(--primary-light);
+}
+
+body.dark-mode .story-form input:focus,
+body.dark-mode .story-form textarea:focus {
+  border-color: var(--primary-dark);
+}
+
+/* Submit button */
+.submit-btn {
+  background-color: var(--primary-light);
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover,
+.submit-btn:focus {
+  background-color: #003d6a;
+  outline: none;
+}
+
+body.dark-mode .submit-btn {
+  background-color: var(--primary-dark);
+}
+
+body.dark-mode .submit-btn:hover,
+body.dark-mode .submit-btn:focus {
+  background-color: #2a65b0;
+}
+
+/* Status message */
+.status-message {
+  margin-top: 0.5rem;
+  min-height: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  color: #333;
+}
+
+body.dark-mode .status-message {
+  color: #eee;
+}
+
+/* Shared Stories Heading */
+.shared-stories-heading {
+  margin-top: 3rem;
+  text-align: center;
+  font-size: 1.8rem;
+  color: var(--primary-light);
+  font-weight: 700;
+}
+
+body.dark-mode .shared-stories-heading {
+  color: var(--primary-dark);
+}
+
+/* Stories list */
+.stories-list {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 1.5rem;
+}
+
+/* Story item card */
+.story-item {
+  background: #f9f9f9;
+  border: 1.5px solid #ddd;
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+body.dark-mode .story-item {
+  background: #2e2e2e;
+  border-color: #444;
+}
+
+/* Story title */
+.story-title {
+  margin: 0 0 0.4rem 0;
+  font-family: "Georgia", serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--primary-light);
+}
+
+body.dark-mode .story-title {
+  color: var(--primary-dark);
+}
+
+/* Story text */
+.story-text {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-light);
+}
+
+body.dark-mode .story-text {
+  color: var(--text-dark);
+}
+
+/* Story timestamp */
+.story-time {
+  font-size: 0.8rem;
+  color: #666;
+  font-style: italic;
+  text-align: right;
+}
+
+body.dark-mode .story-time {
+  color: #aaa;
+}
+
+/* No stories message */
+.no-stories {
+  text-align: center;
+  margin-top: 2rem;
+  font-style: italic;
+  color: #666;
+}
+
+body.dark-mode .no-stories {
+  color: #aaa;
+}
+
+/* Loading text */
+.loading {
+  text-align: center;
+  font-style: italic;
+  margin-top: 2rem;
+  color: #555;
+}
+
+body.dark-mode .loading {
+  color: #bbb;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 480px) {
+  .app-title {
+    font-size: 1.75rem;
+  }
+
+  .shared-stories-heading {
+    font-size: 1.4rem;
+  }
+
+  .submit-btn {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .story-form input,
+  .story-form textarea {
+    font-size: 1rem;
+  }
+
+  .story-title {
+    font-size: 1.1rem;
+  }
+
+  .story-text {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .book-emoji {
+    font-size: 3rem;
+  }
+
+  .submit-btn {
+    font-size: 0.95rem;
+  }
+}
+
+/* Responsive typography for larger screens */
+@media (min-width: 1024px) {
+  .app-title {
+    font-size: 2.75rem;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+  }
+
+  .story-title {
+    font-size: 1.5rem;
+  }
+
+  .story-text {
+    font-size: 1.05rem;
+  }
+
+  .submit-btn {
+    font-size: 1.15rem;
+  }
+}
+
+/* Wrapper for the form with right margin to match story display spacing */
+.story-form-wrapper {
+  margin-right: 1rem;
+}
+
+@media (max-width: 768px) {
+  .story-form-wrapper {
+    margin-right: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .story-form-wrapper {
+    margin-right: 0.25rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .story-form-wrapper {
+    margin-right: 0.2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .story-form-wrapper {
+    margin-right: 1.25rem;
+  }
+}
