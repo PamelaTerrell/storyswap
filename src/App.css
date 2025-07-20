@@ -143,9 +143,18 @@ body.dark-mode .story-form label {
 .checkbox-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
   margin-bottom: 1rem;
 }
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  user-select: none;
+}
+
 
 
 .story-form input,

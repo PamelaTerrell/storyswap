@@ -150,17 +150,19 @@ export default function App() {
         />
 
 <div className="checkbox-row">
-  <label htmlFor="anonymous">Submit anonymously</label>
-  <input
-    type="checkbox"
-    id="anonymous"
-    checked={anonymous}
-    onChange={(e) => {
-      setAnonymous(e.target.checked);
-      if (e.target.checked) setAuthor("");
-    }}
-  />
+  <label className="checkbox-label">
+    Submit anonymously
+    <input
+      type="checkbox"
+      checked={anonymous}
+      onChange={(e) => {
+        setAnonymous(e.target.checked);
+        if (e.target.checked) setAuthor("");
+      }}
+    />
+  </label>
 </div>
+
 
 
 
