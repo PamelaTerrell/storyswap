@@ -149,17 +149,20 @@ export default function App() {
           placeholder="What’s your story called?"
         />
 
-        <label>
-          <input
-            type="checkbox"
-            checked={anonymous}
-            onChange={(e) => {
-              setAnonymous(e.target.checked);
-              if (e.target.checked) setAuthor("");
-            }}
-          />
-          Submit anonymously
-        </label>
+<div className="checkbox-row">
+  <label htmlFor="anonymous">Submit anonymously</label>
+  <input
+    type="checkbox"
+    id="anonymous"
+    checked={anonymous}
+    onChange={(e) => {
+      setAnonymous(e.target.checked);
+      if (e.target.checked) setAuthor("");
+    }}
+  />
+</div>
+
+
 
         <label htmlFor="author">Name or Email</label>
         <input
