@@ -317,7 +317,7 @@ body.dark-mode .loading {
 }
 
 .reaction-button {
-  background: black;
+  background: gray;
   border: none;
   padding: 6px 10px;
   border-radius: 12px;
@@ -328,7 +328,7 @@ body.dark-mode .loading {
 
 .reaction-button:hover {
   transform: scale(1.1);
-  background-color: grey;
+  background-color: lightblue;
 }
 .dark .reaction-button {
   background: #333;
