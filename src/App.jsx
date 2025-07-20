@@ -128,7 +128,10 @@ export default function App() {
       </p>
 
       <p className="subtitle">
-      No login. No judgment. Just your voice — anonymous or not.
+      <p className="form-note">
+      ✨ You can submit anonymously — just check the box below. No names, no logins, just your story.
+      </p>
+
       </p>
 
       <form
