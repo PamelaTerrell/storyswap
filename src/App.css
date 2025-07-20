@@ -132,6 +132,7 @@ body.dark-mode .subtitle {
   display: block;
   margin-bottom: 0.25rem;
   font-weight: 600;
+  
   color: var(--text-light);
 }
 
@@ -141,7 +142,7 @@ body.dark-mode .story-form label {
 
 .story-form input,
 .story-form textarea {
-  width: 100%;
+  width: 90%;
   padding: 0.6rem 0.8rem;
   margin-bottom: 1rem;
   border: 1.5px solid #ccc;
