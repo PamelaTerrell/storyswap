@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabase";
 import "./App.css";
+import { Analytics } from '@vercel/analytics/react';
+
 
 export default function App() {
   const [title, setTitle] = useState("");
@@ -223,6 +225,8 @@ export default function App() {
           No stories yet. Be the first to share something ✨
         </p>
       )}
+      <Analytics />
     </div>
+    
   );
 }
