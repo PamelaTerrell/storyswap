@@ -101,7 +101,7 @@ export default function App() {
       aria-label="StorySwap app"
     >
       <header className="header">
-        <h1 className="app-title">StorySwap</h1>
+        <h1 className="app-title">LifeStoriesNow.com</h1>
         <button
           className="dark-mode-toggle"
           onClick={() => setDarkMode(!darkMode)}
