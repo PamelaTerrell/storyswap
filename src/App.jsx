@@ -124,8 +124,11 @@ export default function App() {
       </div>
 
       <p className="subtitle">
-        A place to anonymously (or not) share wisdom, life lessons, or stories
-        that shaped you.
+      Everyone has a story. Share the one that changed you.
+      </p>
+
+      <p className="subtitle">
+      No login. No judgment. Just your voice — anonymous or not.
       </p>
 
       <form
