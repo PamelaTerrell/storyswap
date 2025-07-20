@@ -308,6 +308,36 @@ body.dark-mode .loading {
   color: #bbb;
 }
 
+.reaction-buttons {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.reaction-button {
+  background: black;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: transform 0.1s ease-in-out;
+}
+
+.reaction-button:hover {
+  transform: scale(1.1);
+  background-color: grey;
+}
+.dark .reaction-button {
+  background: #333;
+  color: #fff;
+}
+.dark .reaction-button:hover {
+  background: #444;
+}
+
+
 /* Responsive adjustments for smaller screens */
 @media (max-width: 480px) {
   .app-title {

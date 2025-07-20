@@ -16,10 +16,10 @@ export default function App() {
     e.preventDefault();
     setStatus("✨ Submitting...");
 
-    // Build the data object conditionally
+    // Build the data object conditionally, include empty reactions object on new story
     const submission = anonymous
-      ? { title, content }
-      : { title, content, author };
+      ? { title, content, reactions: {} }
+      : { title, content, author, reactions: {} };
 
     const { error } = await supabase.from("stories").insert([submission]);
 
@@ -46,9 +46,40 @@ export default function App() {
     if (error) {
       console.error("Error fetching stories:", error.message);
     } else {
-      setStories(data);
+      // Ensure reactions is always an object
+      setStories(
+        data.map((story) => ({
+          ...story,
+          reactions: story.reactions || {},
+        }))
+      );
     }
     setLoading(false);
+  };
+
+  const handleReaction = async (storyId, emoji) => {
+    const story = stories.find((s) => s.id === storyId);
+    const currentCount = story.reactions?.[emoji] || 0;
+
+    const updatedReactions = {
+      ...story.reactions,
+      [emoji]: currentCount + 1,
+    };
+
+    const { error } = await supabase
+      .from("stories")
+      .update({ reactions: updatedReactions })
+      .eq("id", storyId);
+
+    if (error) {
+      console.error("Failed to update reactions:", error.message);
+    } else {
+      setStories((prev) =>
+        prev.map((s) =>
+          s.id === storyId ? { ...s, reactions: updatedReactions } : s
+        )
+      );
+    }
   };
 
   useEffect(() => {
@@ -64,7 +95,11 @@ export default function App() {
   }, [darkMode]);
 
   return (
-    <div className={`app-container ${darkMode ? "dark" : "light"}`} role="main" aria-label="StorySwap app">
+    <div
+      className={`app-container ${darkMode ? "dark" : "light"}`}
+      role="main"
+      aria-label="StorySwap app"
+    >
       <header className="header">
         <h1 className="app-title">StorySwap</h1>
         <button
@@ -77,15 +112,25 @@ export default function App() {
         </button>
       </header>
 
-      <div className="book-emoji" aria-hidden="true" role="img" aria-label="Open book emoji">
+      <div
+        className="book-emoji"
+        aria-hidden="true"
+        role="img"
+        aria-label="Open book emoji"
+      >
         📖
       </div>
 
       <p className="subtitle">
-        A place to anonymously (or not) share wisdom, life lessons, or stories that shaped you.
+        A place to anonymously (or not) share wisdom, life lessons, or stories
+        that shaped you.
       </p>
 
-      <form onSubmit={handleSubmit} aria-label="Submit your story" className="story-form">
+      <form
+        onSubmit={handleSubmit}
+        aria-label="Submit your story"
+        className="story-form"
+      >
         <label htmlFor="title">Title</label>
         <input
           id="title"
@@ -129,8 +174,12 @@ export default function App() {
           rows={5}
         ></textarea>
 
-        <button type="submit" className="submit-btn">📤 Share My Story</button>
-        <p className="status-message" aria-live="polite">{status}</p>
+        <button type="submit" className="submit-btn">
+          📤 Share My Story
+        </button>
+        <p className="status-message" aria-live="polite">
+          {status}
+        </p>
       </form>
 
       <h2 className="shared-stories-heading">
@@ -145,13 +194,34 @@ export default function App() {
             <li key={story.id} className="story-item fade-in">
               <h3 className="story-title">{story.title}</h3>
               <p className="story-text">{story.content}</p>
-              {story.author && <p className="story-author">— {story.author}</p>}
-              <p className="story-time">🕒 {new Date(story.created_at).toLocaleString()}</p>
+              {story.author && (
+                <p className="story-author">— {story.author}</p>
+              )}
+              <p className="story-time">
+                🕒 {new Date(story.created_at).toLocaleString()}
+              </p>
+
+              {/* Reaction buttons */}
+              <div className="reaction-buttons">
+                {["👍", "❤️", "😂", "😢", "😮"].map((emoji) => (
+                  <button
+                    key={emoji}
+                    className="reaction-button"
+                    onClick={() => handleReaction(story.id, emoji)}
+                    aria-label={`React with ${emoji}`}
+                    type="button"
+                  >
+                    {emoji} {story.reactions?.[emoji] || 0}
+                  </button>
+                ))}
+              </div>
             </li>
           ))}
         </ul>
       ) : (
-        <p className="no-stories">No stories yet. Be the first to share something ✨</p>
+        <p className="no-stories">
+          No stories yet. Be the first to share something ✨
+        </p>
       )}
     </div>
   );
