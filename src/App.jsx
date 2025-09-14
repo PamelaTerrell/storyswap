@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabase";
 import "./App.css";
-import { Analytics } from "@vercel/analytics/react";
 import Comments from "./components/Comments";
 import Footer from "./components/Footer";
-
 
 export default function App() {
   const [title, setTitle] = useState("");
@@ -20,7 +18,7 @@ export default function App() {
     e.preventDefault();
     setStatus("✨ Submitting...");
 
-    // Include empty reactions object on new story (as you had)
+    // Include empty reactions object on new story
     const submission = anonymous
       ? { title, content, reactions: {} }
       : { title, content, author, reactions: {} };
@@ -206,7 +204,7 @@ export default function App() {
                 ))}
               </div>
 
-              {/* NEW: comments for this story */}
+              {/* Comments for this story */}
               <Comments storyId={story.id} />
             </li>
           ))}
@@ -214,8 +212,8 @@ export default function App() {
       ) : (
         <p className="no-stories">No stories yet. Be the first to share something ✨</p>
       )}
+
       <Footer />
-      <Analytics />
     </div>
   );
 }
