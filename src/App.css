@@ -446,3 +446,18 @@ body.dark-mode .loading {
     margin-right: 1.25rem;
   }
 }
+
+.comments { margin-top: 16px; display: grid; gap: 12px; }
+.comments-title { font-size: 1rem; font-weight: 600; margin: 0; }
+.comment-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.comment-item { border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px; }
+.comment-meta { font-size: 12px; color: #6b7280; display: flex; gap: 8px; }
+.comment-author { font-weight: 600; }
+.comment-body { margin: 6px 0 0; white-space: pre-wrap; }
+.comment-form { display: grid; gap: 8px; }
+.comment-form input, .comment-form textarea { width: 100%; }
+.comment-actions { display: flex; align-items: center; gap: 8px; }
+.char-count { font-size: 12px; color: #6b7280; }
+/* honeypot stays offscreen via inline styles; class exists for clarity */
+.hp-input { display: none; }
+

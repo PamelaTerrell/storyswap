@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabase";
 import "./App.css";
-import { Analytics } from '@vercel/analytics/react';
-
+import { Analytics } from "@vercel/analytics/react";
+import Comments from "./components/Comments";
 
 export default function App() {
   const [title, setTitle] = useState("");
@@ -18,7 +18,7 @@ export default function App() {
     e.preventDefault();
     setStatus("✨ Submitting...");
 
-    // Build the data object conditionally, include empty reactions object on new story
+    // Include empty reactions object on new story (as you had)
     const submission = anonymous
       ? { title, content, reactions: {} }
       : { title, content, author, reactions: {} };
@@ -48,9 +48,8 @@ export default function App() {
     if (error) {
       console.error("Error fetching stories:", error.message);
     } else {
-      // Ensure reactions is always an object
       setStories(
-        data.map((story) => ({
+        (data || []).map((story) => ({
           ...story,
           reactions: story.reactions || {},
         }))
@@ -61,6 +60,7 @@ export default function App() {
 
   const handleReaction = async (storyId, emoji) => {
     const story = stories.find((s) => s.id === storyId);
+    if (!story) return;
     const currentCount = story.reactions?.[emoji] || 0;
 
     const updatedReactions = {
@@ -89,11 +89,8 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.remove("dark-mode");
-    }
+    if (darkMode) document.body.classList.add("dark-mode");
+    else document.body.classList.remove("dark-mode");
   }, [darkMode]);
 
   return (
@@ -123,22 +120,13 @@ export default function App() {
         📖
       </div>
 
-      <p className="subtitle">
-      Everyone has a story. Share the one that changed you.
-      </p>
+      <p className="subtitle">Everyone has a story. Share the one that changed you.</p>
 
-      <p className="subtitle">
       <p className="form-note">
-      ✨ You can submit anonymously — just check the box below. No names, no logins, just your story.
+        ✨ You can submit anonymously — just check the box below. No names, no logins, just your story.
       </p>
 
-      </p>
-
-      <form
-        onSubmit={handleSubmit}
-        aria-label="Submit your story"
-        className="story-form"
-      >
+      <form onSubmit={handleSubmit} aria-label="Submit your story" className="story-form">
         <label htmlFor="title">Title</label>
         <input
           id="title"
@@ -149,22 +137,19 @@ export default function App() {
           placeholder="What’s your story called?"
         />
 
-<div className="checkbox-row">
-  <label className="checkbox-label">
-    Submit anonymously
-    <input
-      type="checkbox"
-      checked={anonymous}
-      onChange={(e) => {
-        setAnonymous(e.target.checked);
-        if (e.target.checked) setAuthor("");
-      }}
-    />
-  </label>
-</div>
-
-
-
+        <div className="checkbox-row">
+          <label className="checkbox-label">
+            Submit anonymously
+            <input
+              type="checkbox"
+              checked={anonymous}
+              onChange={(e) => {
+                setAnonymous(e.target.checked);
+                if (e.target.checked) setAuthor("");
+              }}
+            />
+          </label>
+        </div>
 
         <label htmlFor="author">Name or Email</label>
         <input
@@ -187,17 +172,11 @@ export default function App() {
           rows={5}
         ></textarea>
 
-        <button type="submit" className="submit-btn">
-          📤 Share My Story
-        </button>
-        <p className="status-message" aria-live="polite">
-          {status}
-        </p>
+        <button type="submit" className="submit-btn">📤 Share My Story</button>
+        <p className="status-message" aria-live="polite">{status}</p>
       </form>
 
-      <h2 className="shared-stories-heading">
-        🌠 Shared Stories ({stories.length})
-      </h2>
+      <h2 className="shared-stories-heading">🌠 Shared Stories ({stories.length})</h2>
 
       {loading ? (
         <p className="loading">Loading stories...</p>
@@ -207,12 +186,8 @@ export default function App() {
             <li key={story.id} className="story-item fade-in">
               <h3 className="story-title">{story.title}</h3>
               <p className="story-text">{story.content}</p>
-              {story.author && (
-                <p className="story-author">— {story.author}</p>
-              )}
-              <p className="story-time">
-                🕒 {new Date(story.created_at).toLocaleString()}
-              </p>
+              {story.author && <p className="story-author">— {story.author}</p>}
+              <p className="story-time">🕒 {new Date(story.created_at).toLocaleString()}</p>
 
               {/* Reaction buttons */}
               <div className="reaction-buttons">
@@ -228,16 +203,17 @@ export default function App() {
                   </button>
                 ))}
               </div>
+
+              {/* NEW: comments for this story */}
+              <Comments storyId={story.id} />
             </li>
           ))}
         </ul>
       ) : (
-        <p className="no-stories">
-          No stories yet. Be the first to share something ✨
-        </p>
+        <p className="no-stories">No stories yet. Be the first to share something ✨</p>
       )}
+
       <Analytics />
     </div>
-    
   );
 }
