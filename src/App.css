@@ -461,3 +461,35 @@ body.dark-mode .loading {
 /* honeypot stays offscreen via inline styles; class exists for clarity */
 .hp-input { display: none; }
 
+.footer {
+  margin-top: 32px;
+  border-top: 1px solid #e5e7eb;
+  padding: 16px 0;
+}
+.footer-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 12px;
+  display: flex;
+  justify-content: center;
+  font-size: 14px;
+  color: #374151; /* slate-700 */
+  text-align: center;
+}
+.footer .dot { margin: 0 8px; }
+.footer a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.footer a:focus-visible {
+  outline: 2px dashed currentColor;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Dark mode tweaks */
+.dark-mode .footer { border-top-color: #334155; }      /* slate-700 -> border */
+.dark-mode .footer-inner { color: #cbd5e1; }           /* slate-300 -> text */
+
+

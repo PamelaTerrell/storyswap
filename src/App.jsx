@@ -3,6 +3,8 @@ import { supabase } from "./supabase";
 import "./App.css";
 import { Analytics } from "@vercel/analytics/react";
 import Comments from "./components/Comments";
+import Footer from "./components/Footer";
+
 
 export default function App() {
   const [title, setTitle] = useState("");
@@ -212,7 +214,7 @@ export default function App() {
       ) : (
         <p className="no-stories">No stories yet. Be the first to share something ✨</p>
       )}
-
+      <Footer />
       <Analytics />
     </div>
   );
