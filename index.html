@@ -14,23 +14,26 @@
     <meta name="referrer" content="strict-origin-when-cross-origin" />
 
     <!-- Icons / PWA -->
+    <!-- Keep your existing favicon -->
     <link rel="icon" type="image/png" href="/book.png" />
-    <link rel="apple-touch-icon" href="/icons/icon-180.png" />
+    <!-- New Apple touch icon you added to /public -->
+    <link rel="apple-touch-icon" href="/icon-180.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Social cards -->
+    <!-- Social cards (use the new 1200x630 image you added) -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="LifeStoriesNow" />
     <meta property="og:title" content="Life Stories Now — Share your story. Help someone today." />
     <meta property="og:description" content="Share your story anonymously and inspire someone who needs it." />
     <meta property="og:url" content="https://lifestoriesnow.com/" />
-    <meta property="og:image" content="https://lifestoriesnow.com/og.jpg" />
+    <meta property="og:image" content="https://lifestoriesnow.com/book-og.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="LifeStoriesNow blue open book logo" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Life Stories Now — Share your story. Help someone today." />
     <meta name="twitter:description" content="Share your story anonymously and inspire someone who needs it." />
-    <meta name="twitter:image" content="https://lifestoriesnow.com/og.jpg" />
+    <meta name="twitter:image" content="https://lifestoriesnow.com/book-og.jpg" />
 
     <!-- Small perf wins -->
     <link rel="preconnect" href="https://www.googletagmanager.com" />
@@ -52,7 +55,6 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){ dataLayer.push(arguments); }
       gtag('js', new Date());
-
       // If you add React Router pageview tracking, switch to:
       // gtag('config', 'G-N67K46X2JM', { send_page_view: false });
       gtag('config', 'G-N67K46X2JM');
