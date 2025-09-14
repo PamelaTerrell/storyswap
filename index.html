@@ -1,12 +1,66 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Life Stories Now — Share your story. Help someone today.</title>
+    <meta name="description" content="LifeStoriesNow lets people anonymously share moments, lessons, and advice. Read, reflect, and add your story to help someone today." />
+    <link rel="canonical" href="https://lifestoriesnow.com/" />
+
+    <!-- Search & theming -->
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <!-- Icons / PWA -->
     <link rel="icon" type="image/png" href="/book.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LifeStoriesNow.com</title>
+    <link rel="apple-touch-icon" href="/icons/icon-180.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Social cards -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="LifeStoriesNow" />
+    <meta property="og:title" content="Life Stories Now — Share your story. Help someone today." />
+    <meta property="og:description" content="Share your story anonymously and inspire someone who needs it." />
+    <meta property="og:url" content="https://lifestoriesnow.com/" />
+    <meta property="og:image" content="https://lifestoriesnow.com/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Life Stories Now — Share your story. Help someone today." />
+    <meta name="twitter:description" content="Share your story anonymously and inspire someone who needs it." />
+    <meta name="twitter:image" content="https://lifestoriesnow.com/og.jpg" />
+
+    <!-- Small perf wins -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://www.google-analytics.com" crossorigin />
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Life Stories Now",
+      "url": "https://lifestoriesnow.com/"
+    }
+    </script>
+
+    <!-- Google tag (GA4) — keep in <head> -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N67K46X2JM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      gtag('js', new Date());
+
+      // If you add React Router pageview tracking, switch to:
+      // gtag('config', 'G-N67K46X2JM', { send_page_view: false });
+      gtag('config', 'G-N67K46X2JM');
+    </script>
   </head>
+
   <body>
+    <noscript>This site works best with JavaScript enabled.</noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
