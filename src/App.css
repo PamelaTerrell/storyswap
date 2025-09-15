@@ -543,3 +543,72 @@ body.dark-mode .loading {
   outline-offset: 2px;
 }
 
+/* Base text wrap stays */
+.story-text { white-space: pre-wrap; word-break: break-word; }
+
+/* Expandable block */
+.expandable { position: relative; display: grid; gap: 8px; }
+.story-text.clamped { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+/* Fade hint */
+.fadeout {
+  pointer-events: none;
+  position: relative;
+  margin-top: -24px;
+  height: 24px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+}
+.dark-mode .fadeout {
+  background: linear-gradient(to bottom, rgba(17,24,39,0), rgba(17,24,39,1));
+}
+.expand-btn {
+  align-self: start; justify-self: start;
+  background: transparent; border: 1px solid #e5e7eb;
+  padding: 6px 10px; border-radius: 8px; font: inherit; cursor: pointer;
+}
+.dark-mode .expand-btn { border-color: #334155; color: #cbd5e1; }
+.expand-btn:focus-visible { outline: 2px dashed currentColor; outline-offset: 2px; }
+
+/* Header controls */
+.header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.chip {
+  background: transparent; border: 1px solid #e5e7eb;
+  padding: 6px 10px; border-radius: 999px; cursor: pointer; font: inherit;
+}
+.chip.active { background: #f3f4f6; }
+.dark-mode .chip { border-color: #334155; color: #cbd5e1; }
+.dark-mode .chip.active { background: #1f2937; }
+
+/* Card actions row */
+.card-actions {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; margin-top: 8px; flex-wrap: wrap;
+}
+
+/* Centered controls under the subtitle */
+.story-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 8px 0 16px;
+}
+
+/* Chip buttons (reusing the style from earlier) */
+.chip {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+}
+.chip.active { background: #f3f4f6; }
+
+.dark-mode .chip { border-color: #334155; color: #cbd5e1; }
+.dark-mode .chip.active { background: #1f2937; }
+
+/* (Optional) tighten header spacing since controls moved below */
+.header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+

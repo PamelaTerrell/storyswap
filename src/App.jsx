@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { supabase } from "./supabase";
 import "./App.css";
 import Comments from "./components/Comments";
-import ExpandableText from "./components/ExpandableText";
-
 import Footer from "./components/Footer";
+import ExpandableText from "./components/ExpandableText";
 
 export default function App() {
   const [title, setTitle] = useState("");
@@ -16,11 +15,14 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
 
+  // UI-only controls
+  const [sort, setSort] = useState("new");      // 'new' | 'react'
+  const [expandAll, setExpandAll] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("✨ Submitting...");
 
-    // Include empty reactions object on new story
     const submission = anonymous
       ? { title, content, reactions: {} }
       : { title, content, author, reactions: {} };
@@ -37,6 +39,7 @@ export default function App() {
       setAuthor("");
       setAnonymous(true);
       fetchStories();
+      window.gtag?.("event", "story_submit", { content_length: content.length });
     }
   };
 
@@ -65,10 +68,7 @@ export default function App() {
     if (!story) return;
     const currentCount = story.reactions?.[emoji] || 0;
 
-    const updatedReactions = {
-      ...story.reactions,
-      [emoji]: currentCount + 1,
-    };
+    const updatedReactions = { ...story.reactions, [emoji]: currentCount + 1 };
 
     const { error } = await supabase
       .from("stories")
@@ -79,21 +79,33 @@ export default function App() {
       console.error("Failed to update reactions:", error.message);
     } else {
       setStories((prev) =>
-        prev.map((s) =>
-          s.id === storyId ? { ...s, reactions: updatedReactions } : s
-        )
+        prev.map((s) => (s.id === storyId ? { ...s, reactions: updatedReactions } : s))
       );
+      window.gtag?.("event", "story_reaction", { emoji, story_id: storyId });
     }
   };
 
-  useEffect(() => {
-    fetchStories();
-  }, []);
+  useEffect(() => { fetchStories(); }, []);
 
   useEffect(() => {
     if (darkMode) document.body.classList.add("dark-mode");
     else document.body.classList.remove("dark-mode");
   }, [darkMode]);
+
+  // client-side sort
+  const sortedStories = useMemo(() => {
+    if (sort === "react") {
+      const score = (r = {}) => Object.values(r).reduce((a, b) => a + b, 0);
+      return [...stories].sort((a, b) => score(b.reactions) - score(a.reactions));
+    }
+    return [...stories].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  }, [stories, sort]);
+
+  // helpers
+  function copyLink(id) {
+    const url = `${location.origin}/#story-${id}`;
+    navigator.clipboard.writeText(url).catch(() => alert("Copy failed — please try again."));
+  }
 
   return (
     <div
@@ -123,6 +135,33 @@ export default function App() {
       </div>
 
       <p className="subtitle">Everyone has a story. Share the one that changed you.</p>
+
+      {/* ⬇️ NEW: centered controls under the subtitle */}
+      <div className="story-controls" role="group" aria-label="Story controls">
+        <button
+          className={`chip ${sort === "new" ? "active" : ""}`}
+          onClick={() => setSort("new")}
+          type="button"
+        >
+          Newest
+        </button>
+        <button
+          className={`chip ${sort === "react" ? "active" : ""}`}
+          onClick={() => setSort("react")}
+          type="button"
+        >
+          Most reactions
+        </button>
+        <button
+          className={`chip ${expandAll ? "active" : ""}`}
+          onClick={() => setExpandAll((v) => !v)}
+          type="button"
+          aria-pressed={expandAll}
+          aria-label={expandAll ? "Collapse all stories" : "Expand all stories"}
+        >
+          {expandAll ? "Collapse all" : "Expand all"}
+        </button>
+      </div>
 
       <p className="form-note">
         ✨ You can submit anonymously — just check the box below. No names, no logins, just your story.
@@ -178,35 +217,54 @@ export default function App() {
         <p className="status-message" aria-live="polite">{status}</p>
       </form>
 
-      <h2 className="shared-stories-heading">🌠 Shared Stories ({stories.length})</h2>
+      <h2 className="shared-stories-heading">🌠 Shared Stories ({sortedStories.length})</h2>
 
       {loading ? (
         <p className="loading">Loading stories...</p>
-      ) : stories.length > 0 ? (
+      ) : sortedStories.length > 0 ? (
         <ul className="stories-list">
-          {stories.map((story) => (
-            <li key={story.id} className="story-item fade-in">
+          {sortedStories.map((story) => (
+            <li id={`story-${story.id}`} key={story.id} className="story-item fade-in">
               <h3 className="story-title">{story.title}</h3>
-              <ExpandableText text={story.content} lines={8} />
+
+              <ExpandableText
+                text={story.content}
+                lines={8}
+                forceExpanded={expandAll}
+                onToggle={(isExpanded) => {
+                  if (isExpanded) window.gtag?.("event", "read_more", { story_id: story.id });
+                }}
+              />
+
               {story.author && <p className="story-author">— {story.author}</p>}
               <p className="story-time">🕒 {new Date(story.created_at).toLocaleString()}</p>
 
-              {/* Reaction buttons */}
-              <div className="reaction-buttons">
-                {["👍", "❤️", "😂", "😢", "😮"].map((emoji) => (
-                  <button
-                    key={emoji}
-                    className="reaction-button"
-                    onClick={() => handleReaction(story.id, emoji)}
-                    aria-label={`React with ${emoji}`}
-                    type="button"
-                  >
-                    {emoji} {story.reactions?.[emoji] || 0}
-                  </button>
-                ))}
+              <div className="card-actions">
+                <div className="reaction-buttons">
+                  {["👍", "❤️", "😂", "😢", "😮"].map((emoji) => (
+                    <button
+                      key={emoji}
+                      className="reaction-button"
+                      onClick={() => handleReaction(story.id, emoji)}
+                      aria-label={`React with ${emoji}`}
+                      type="button"
+                    >
+                      {emoji} {story.reactions?.[emoji] || 0}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  className="chip"
+                  type="button"
+                  onClick={() => copyLink(story.id)}
+                  aria-label="Copy link to this story"
+                  title="Copy link"
+                >
+                  🔗 Copy link
+                </button>
               </div>
 
-              {/* Comments for this story */}
               <Comments storyId={story.id} />
             </li>
           ))}
