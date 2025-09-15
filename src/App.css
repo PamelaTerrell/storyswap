@@ -492,4 +492,54 @@ body.dark-mode .loading {
 .dark-mode .footer { border-top-color: #334155; }      /* slate-700 -> border */
 .dark-mode .footer-inner { color: #cbd5e1; }           /* slate-300 -> text */
 
+/* Make long text tidy by default */
+.story-text { white-space: pre-wrap; word-break: break-word; }
+
+/* Expander layout */
+.expandable {
+  position: relative;
+  display: grid;
+  gap: 8px;
+}
+
+/* Line clamp when collapsed */
+.story-text.clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Gentle gradient hint that more text exists */
+.fadeout {
+  pointer-events: none;
+  position: relative;
+  margin-top: -24px; /* pulls fade over the last lines a bit */
+  height: 24px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+}
+
+/* Dark mode fade color */
+.dark-mode .fadeout {
+  background: linear-gradient(to bottom, rgba(17,24,39,0), rgba(17,24,39,1)); /* near #111827 */
+}
+
+/* Read more/less button */
+.expand-btn {
+  align-self: start;
+  justify-self: start;
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font: inherit;
+  cursor: pointer;
+}
+.dark-mode .expand-btn {
+  border-color: #334155;
+  color: #cbd5e1;
+}
+.expand-btn:focus-visible {
+  outline: 2px dashed currentColor;
+  outline-offset: 2px;
+}
 

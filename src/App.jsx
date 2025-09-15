@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "./supabase";
 import "./App.css";
 import Comments from "./components/Comments";
+import ExpandableText from "./components/ExpandableText";
+
 import Footer from "./components/Footer";
 
 export default function App() {
@@ -185,7 +187,7 @@ export default function App() {
           {stories.map((story) => (
             <li key={story.id} className="story-item fade-in">
               <h3 className="story-title">{story.title}</h3>
-              <p className="story-text">{story.content}</p>
+              <ExpandableText text={story.content} lines={8} />
               {story.author && <p className="story-author">— {story.author}</p>}
               <p className="story-time">🕒 {new Date(story.created_at).toLocaleString()}</p>
 
