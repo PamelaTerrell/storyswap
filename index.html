@@ -14,13 +14,11 @@
     <meta name="referrer" content="strict-origin-when-cross-origin" />
 
     <!-- Icons / PWA -->
-    <!-- Keep your existing favicon -->
     <link rel="icon" type="image/png" href="/book.png" />
-    <!-- New Apple touch icon you added to /public -->
     <link rel="apple-touch-icon" href="/icon-180.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Social cards (use the new 1200x630 image you added) -->
+    <!-- Social cards -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="LifeStoriesNow" />
     <meta property="og:title" content="Life Stories Now — Share your story. Help someone today." />
@@ -55,8 +53,7 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){ dataLayer.push(arguments); }
       gtag('js', new Date());
-      // If you add React Router pageview tracking, switch to:
-      // gtag('config', 'G-N67K46X2JM', { send_page_view: false });
+      // If you add client-side routing later, switch to: send_page_view: false
       gtag('config', 'G-N67K46X2JM');
     </script>
   </head>
@@ -64,6 +61,100 @@
   <body>
     <noscript>This site works best with JavaScript enabled.</noscript>
     <div id="root"></div>
+
+    <!-- Your app script -->
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Lightweight engagement tracking (scroll, clicks, simple time-on-page) -->
+    <script>
+      (function () {
+        // guard: don't error if analytics is blocked
+        const hasGtag = () => typeof window.gtag === 'function';
+
+        // ---- Scroll depth (fire once per threshold) ----
+        const thresholds = [25, 50, 90];
+        const fired = new Set();
+
+        function onScroll() {
+          const doc = document.documentElement;
+          const max = Math.max(
+            doc.scrollHeight,
+            document.body.scrollHeight || 0
+          );
+          const viewportBottom = window.scrollY + window.innerHeight;
+          const pct = Math.round((viewportBottom / max) * 100);
+
+          thresholds.forEach(t => {
+            if (pct >= t && !fired.has(t)) {
+              fired.add(t);
+              if (hasGtag()) gtag('event', 'scroll_depth', { value: t });
+            }
+          });
+        }
+        // Throttle scroll handler a bit
+        let scrollTick = false;
+        window.addEventListener('scroll', function () {
+          if (!scrollTick) {
+            scrollTick = true;
+            requestAnimationFrame(function () {
+              onScroll();
+              scrollTick = false;
+            });
+          }
+        }, { passive: true });
+
+        // Initial check (short pages)
+        window.addEventListener('load', onScroll);
+
+        // ---- Clicks on links & buttons ----
+        document.addEventListener('click', function (e) {
+          const target = e.target.closest('a, button');
+          if (!target) return;
+
+          const label =
+            (target.innerText && target.innerText.trim().slice(0, 80)) ||
+            target.getAttribute('aria-label') ||
+            target.href ||
+            'unlabeled';
+
+          if (hasGtag()) {
+            gtag('event', 'interaction', {
+              event_category: target.tagName.toLowerCase(),
+              event_label: label
+            });
+          }
+        });
+
+        // ---- Simple time-on-page pings (10s & 30s) ----
+        function pingAfter(ms, name) {
+          const id = setTimeout(() => {
+            if (hasGtag()) gtag('event', name);
+          }, ms);
+
+          // Pause timer when tab is hidden, resume when visible
+          let start, remaining = ms;
+          function onHide() {
+            if (document.hidden) {
+              clearTimeout(timerId.current);
+              remaining -= Date.now() - start;
+            } else {
+              start = Date.now();
+              timerId.current = setTimeout(() => {
+                if (hasGtag()) gtag('event', name);
+                cleanup();
+              }, Math.max(0, remaining));
+            }
+          }
+          const timerId = { current: id };
+          function cleanup() {
+            document.removeEventListener('visibilitychange', onHide);
+          }
+          start = Date.now();
+          document.addEventListener('visibilitychange', onHide);
+        }
+        pingAfter(10000, 'time_10s');
+        pingAfter(30000, 'time_30s');
+      })();
+    </script>
   </body>
 </html>
